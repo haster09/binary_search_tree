@@ -87,7 +87,7 @@ function remove(root, value) {
 
 function find(root, value) {
   if (root === null) {
-    return console.log('data not found');
+    return console.log('value not found');
   }
   if (value === root.data) {
     return console.log(root.data);
@@ -101,10 +101,34 @@ function find(root, value) {
   return;
 }
 
+function levelOrder(root) {
+  const queue = [];
+  const result = [];
+  queue.push(root.data);
+    function breadth(root) {
+      if (!queue) {
+        return;
+      }
+      while (queue) {
+        if (queue[0].left) {
+          queue.push(root.left.data);
+        }
+        if (queue[0].right) {
+          queue.push(root.right.data);
+        }
+        console.log(queue)
+        result.push(queue[0]);
+        queue.shift()
+        breadth(queue[0]);
+      }
+      return result;
+    }
+    return breadth();
+  }
+
 const arr = [1, 2, 3, 4, 5, 6, 7];
 let bst = Tree(arr).root;
 insert(bst, 8);
-insert(bst, 6.5);
-remove(bst, 8);
 find(bst, 5)
+console.log(levelOrder(bst))
 prettyPrint(bst)
