@@ -104,31 +104,145 @@ function find(root, value) {
 function levelOrder(root) {
   const queue = [];
   const result = [];
-  queue.push(root.data);
-    function breadth(root) {
-      if (!queue) {
-        return;
-      }
-      while (queue) {
-        if (queue[0].left) {
-          queue.push(root.left.data);
-        }
-        if (queue[0].right) {
-          queue.push(root.right.data);
-        }
-        console.log(queue)
-        result.push(queue[0]);
-        queue.shift()
-        breadth(queue[0]);
-      }
-      return result;
+  let node = root;
+  queue.push(node);
+  while (queue.length > 0) {
+    if(node.left) {
+      queue.push(node.left);
     }
-    return breadth();
+    if (node.right) {
+      queue.push(node.right)
+    }
+    result.push(queue[0].data);
+    queue.shift();
+    node = queue[0]
+  }
+  return result;
+}
+
+  function inOrder(root, result = []) {
+    if (root === null) {
+      return;
+    }
+      inOrder(root.left, result);
+      result.push(root.data);
+      inOrder(root.right, result);
+      return result;
   }
 
+  function preOrder(root, result = []) {
+    if (root === null) {
+      return;
+    }
+      result.push(root.data);
+      preOrder(root.left, result);
+      preOrder(root.right, result);
+      return result;
+  }
+
+  function postOrder(root, result = []) {
+    if (root === null) {
+      return;
+    }
+      postOrder(root.left, result);
+      postOrder(root.right, result);
+      result.push(root.data);
+      return result;
+  }
+
+  function height(node, value) {
+    console.log(node)
+    if (node.data === value) {
+      result = heightRec(node) - 1;
+    }
+    if (node.data > value) {
+      height(node.left, value);
+    }
+    if (node.data < value) {
+      height(node.right, value);
+    }
+    return result;
+  }
+  function heightRec(node) {
+    if (node === null) {
+      return 0;
+    }
+    let right = heightRec(node.right); 
+    let left = heightRec(node.left);
+
+    if (right.length < left.length) {
+      left++;
+    } 
+    else {
+      right++;
+    }
+    return (left.length > right.length ? left : right);
+  }
+
+  function depth(root, value, result = 0) {
+    if (root === null) {
+      return 0;
+    }
+    if (root.data === value) {
+      toReturn = result;
+    }
+    if (root.data > value) {
+      result++;
+      depth(root.left, value, result);
+    }
+    if (root.data < value) {
+      result++;
+      depth(root.right, value, result);
+    }
+    return toReturn;
+  }
+
+function isBalancedRec(root) {
+  if (root === null) {
+    return 0;
+  }
+  let left = isBalancedRec(root.left);
+  let right = isBalancedRec(root.right);
+
+  return 1 + left + right
+}
+
+function isBalanced(root) {
+  if (root === null) {
+    return 0;
+  }
+  let left = isBalancedRec(root.left);
+  let right = isBalancedRec(root.right);
+  
+  if (left - right > -2 && left - right < 2) {
+    return true;
+  }
+  else {
+    return false;
+  }
+}
+
+function rebalance(root) {
+  const array = inOrder(root);
+  root = Tree(array).root;
+  prettyPrint(root);
+  return root;
+}
+ 
 const arr = [1, 2, 3, 4, 5, 6, 7];
 let bst = Tree(arr).root;
-insert(bst, 8);
-find(bst, 5)
-console.log(levelOrder(bst))
-prettyPrint(bst)
+prettyPrint(bst);
+console.log(isBalanced(bst));
+console.log(preOrder(bst));
+console.log(inOrder(bst));
+console.log(postOrder(bst));
+insert(bst, 100);
+insert(bst, 112);
+insert(bst, 69);
+prettyPrint(bst);
+console.log(isBalanced(bst));
+bst = rebalance(bst);
+console.log(isBalanced(bst));
+console.log(preOrder(bst));
+console.log(inOrder(bst));
+console.log(postOrder(bst));
